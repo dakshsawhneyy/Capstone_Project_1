@@ -6,13 +6,13 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     steps:
       - name: Code Checkout
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -25,3 +25,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Frontend Image
+        working-directory: app/frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:latest
