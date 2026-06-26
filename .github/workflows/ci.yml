@@ -95,7 +95,13 @@ jobs:
         run: |
           cat infra/ansible/inventory.ini
 
+      - name: Add EC2 host key
+        run: |
+          ssh-keyscan -H ${{ steps.ec2.outputs.ip }} >> ~/.ssh/known_hosts
+
       - name: Run Ansible Playbook
         working-directory: infra/ansible
+        # env:
+        #   ANSIBLE_HOST_KEY_CHECKING: False
         run: |
           ansible-playbook -i inventory.ini -v final-playbook.yml
