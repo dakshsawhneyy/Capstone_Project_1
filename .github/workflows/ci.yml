@@ -83,7 +83,7 @@ jobs:
         run: |
           cat > infra/ansible/inventory.ini <<EOF
           [servers]
-          ${{ env.EC2_IP }}
+          ${{ steps.ec2.outputs.ip }}
 
           [servers:vars]
           ansible_user=ubuntu
