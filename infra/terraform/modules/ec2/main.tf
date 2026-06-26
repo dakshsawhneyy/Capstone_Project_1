@@ -8,6 +8,18 @@ resource "aws_security_group" "ec2_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   egress {
     from_port   = 0
@@ -25,6 +37,7 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_instance" "ec2_instance" {
   ami           = "ami-019715e0d74f695be"
   instance_type = var.inst_type
+  key_name = "general"
   subnet_id     = var.subnet_id
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
   tags = {
@@ -36,7 +49,7 @@ resource "aws_instance" "ec2_instance" {
 
 resource "aws_ebs_volume" "ebs_volume" {
   count = var.st_reqd > 0 ? 1 : 0
-  availability_zone = "ap-south-1a"
+  availability_zone = aws_instance.ec2_instance.availability_zone
   size              = var.st_reqd
   type              = "gp2"
   tags = var.tags
