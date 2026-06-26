@@ -62,7 +62,7 @@ jobs:
 
       - name: Debug EC2 IP
         run: |
-          echo "IP is: $EC2_IP"
+          echo "IP is: ${{ steps.ec2.outputs.ip }}"
 
       #   # Install Ansible
       # - name: Install Ansible
