@@ -33,6 +33,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform-version: "1.18.0"
+          terraform_wrapper: false
 
       - name: Configure AWS Creadentials
         uses: aws-actions/configure-aws-credentials@v6.2.0
@@ -53,22 +54,23 @@ jobs:
         working-directory: infra/terraform
         run: terraform apply --auto-approve
 
-      - name: Save EC2 IP to GitHub Env
+      - name: Get EC2 IP
+        id: ec2
         working-directory: infra/terraform
         run: |
-          echo "EC2_IP=$(terraform output -raw instance_public_ip | tr -d '\r\n')" >> $GITHUB_ENV
+          echo "ip=$(terraform output -raw instance_public_ip)" >> "$GITHUB_OUTPUT"
 
       - name: Debug EC2 IP
         run: |
           echo "IP is: $EC2_IP"
 
-        # Install Ansible
-      - name: Install Ansible
-        run: |
-            sudo apt update
-            sudo apt install software-properties-common
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
+      #   # Install Ansible
+      # - name: Install Ansible
+      #   run: |
+      #       sudo apt update
+      #       sudo apt install software-properties-common
+      #       sudo add-apt-repository --yes --update ppa:ansible/ansible
+      #       sudo apt install ansible
 
 
       - name: Configure SSH Key
@@ -93,7 +95,7 @@ jobs:
         run: |
           cat infra/ansible/inventory.ini
 
-      - name: Run Ansible Playbook
-        working-directory: infra/ansible
-        run: |
-          ansible-playbook -i inventory.ini -v final-playbook.yml
+      # - name: Run Ansible Playbook
+      #   working-directory: infra/ansible
+      #   run: |
+      #     ansible-playbook -i inventory.ini -v final-playbook.yml
