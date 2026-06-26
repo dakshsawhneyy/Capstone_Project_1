@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend/
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on: 
+      - backend
+    networks:
+      - capstone
+  backend:
+    build: ./backend/
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/dd_db
+    networks:
+      - capstone
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports: 
+      - "27017:27017"
+    networks:
+      - capstone
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  capstone:
+volumes:
+  mongo-data:
