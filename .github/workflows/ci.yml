@@ -16,9 +16,9 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies in Frontend
-        working-directory: app/frontend
-        run: npm install
+      # - name: Install Dependencies in Frontend
+      #   working-directory: app/frontend
+      #   run: npm install
 
       - name: Login Docker
         uses: docker/login-action@v3
@@ -31,3 +31,9 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:latest
+      
+      - name: Build and Push Backend Image
+        working-directory: app/backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_backend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/capstone_backend:latest
