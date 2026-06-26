@@ -54,9 +54,13 @@ jobs:
         run: terraform apply --auto-approve
 
       - name: Save EC2 IP to GitHub Env
+        working-directory: infra/terraform
         run: |
           echo "EC2_IP=$(terraform output -raw instance_public_ip | tr -d '\r\n')" >> $GITHUB_ENV
 
+      - name: Debug EC2 IP
+        run: |
+          echo "IP is: $EC2_IP"
 
         # Install Ansible
       - name: Install Ansible
