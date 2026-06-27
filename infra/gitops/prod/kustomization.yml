@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# namespace.yml must be applied first — all other resources live inside it
+resources:
+  - namespace.yml
+  - mongo.yml
+  - backend.yml
+  - frontend.yml
