@@ -1,7 +1,12 @@
 const express = require("express");
 //const cors = require("cors");
 
+const { register, metricsMiddleware } = require("./app/config/metrics");
+
 const app = express();
+
+// Collect metrics for every incoming request (mount before routes)
+app.use(metricsMiddleware);
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -26,6 +31,12 @@ db.mongoose
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Test application." });
+});
+
+// Prometheus metrics endpoint
+app.get("/metrics", async (req, res) => {
+  res.setHeader("Content-Type", register.contentType);
+  res.send(await register.metrics());
 });
 
 require("./app/routes/turorial.routes")(app);
