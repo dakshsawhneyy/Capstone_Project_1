@@ -24,14 +24,14 @@ jobs:
       - name: Build and Push Frontend Image
         working-directory: app/frontend
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:v1 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:v1
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:${{ github.sha }}
       
       - name: Build and Push Backend Image
         working-directory: app/backend
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_backend:v1 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/capstone_backend:v1
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/capstone_backend:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/capstone_backend:${{ github.sha }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
@@ -112,19 +112,19 @@ jobs:
 
       # CD Part
 
-      # # Update deployment manifest with latest image
-      # - name: Update Backend Image
-      #   run: |
-      #     sed -i "s|image:.*capstone_backend.*|image: ${{ secrets.DOCKER_USERNAME }}/capstone_backend:${{ github.sha }}|g" gitops/dev/backend.yml
+      # Update deployment manifest with unique image tag
+      - name: Update Backend Image
+        run: |
+          sed -i "s|image:.*capstone_backend.*|image: ${{ secrets.DOCKER_USERNAME }}/capstone_backend:${{ github.sha }}|g" infra/gitops/dev/backend.yml
 
-      # - name: Update Frontend Image
-      #   run: |
-      #     sed -i "s|image:.*capstone_frontend.*|image: ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:${{ github.sha }}|g" gitops/dev/frontend.yml
+      - name: Update Frontend Image
+        run: |
+          sed -i "s|image:.*capstone_frontend.*|image: ${{ secrets.DOCKER_USERNAME }}/capstone_frontend:${{ github.sha }}|g" infra/gitops/dev/frontend.yml
 
-      # - name: Commit GitOps Changes
-      #   run: |
-      #     git config user.name "github-actions"
-      #     git config user.email "github-actions@github.com"
-      #     git add gitops/
-      #     git commit -m "Update deployment manifests"
-      #     git push
+      - name: Commit GitOps Changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add gitops/
+          git commit -m "Update deployment manifests tags"
+          git push
