@@ -111,3 +111,7 @@ jobs:
 
       - name: Configure Kubeconfig for EKS
         run: aws eks update-kubeconfig --name capstone-eks --region ap-south-1
+
+      - name: Install manifests to EKS Cluster
+        working-directory: infra/k8s
+        run: kubectl apply -k .
