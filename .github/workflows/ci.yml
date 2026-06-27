@@ -54,54 +54,54 @@ jobs:
         working-directory: infra/terraform
         run: terraform apply --auto-approve
 
-      - name: Get EC2 IP
-        id: ec2
-        working-directory: infra/terraform
-        run: |
-          echo "ip=$(terraform output -raw instance_public_ip)" >> "$GITHUB_OUTPUT"
+      # - name: Get EC2 IP
+      #   id: ec2
+      #   working-directory: infra/terraform
+      #   run: |
+      #     echo "ip=$(terraform output -raw instance_public_ip)" >> "$GITHUB_OUTPUT"
 
-      - name: Debug EC2 IP
-        run: |
-          echo "IP is: ${{ steps.ec2.outputs.ip }}"
+      # - name: Debug EC2 IP
+      #   run: |
+      #     echo "IP is: ${{ steps.ec2.outputs.ip }}"
 
-        # Install Ansible
-      - name: Install Ansible
-        run: |
-            sudo apt update
-            sudo apt install software-properties-common
-            sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
+      #   # Install Ansible
+      # - name: Install Ansible
+      #   run: |
+      #       sudo apt update
+      #       sudo apt install software-properties-common
+      #       sudo add-apt-repository --yes --update ppa:ansible/ansible
+      #       sudo apt install ansible
 
 
-      - name: Configure SSH Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/general.pem
-          chmod 400 ~/.ssh/general.pem
+      # - name: Configure SSH Key
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/general.pem
+      #     chmod 400 ~/.ssh/general.pem
 
-      - name: Generate Inventory
-        run: |
-          cat > infra/ansible/inventory.ini <<EOF
-          [servers]
-          ${{ steps.ec2.outputs.ip }}
+      # - name: Generate Inventory
+      #   run: |
+      #     cat > infra/ansible/inventory.ini <<EOF
+      #     [servers]
+      #     ${{ steps.ec2.outputs.ip }}
 
-          [servers:vars]
-          ansible_user=ubuntu
-          ansible_ssh_private_key_file=~/.ssh/general.pem
-          ansible_python_interpreter=/usr/bin/python3
-          EOF
+      #     [servers:vars]
+      #     ansible_user=ubuntu
+      #     ansible_ssh_private_key_file=~/.ssh/general.pem
+      #     ansible_python_interpreter=/usr/bin/python3
+      #     EOF
 
-      - name: Print Inventory
-        run: |
-          cat infra/ansible/inventory.ini
+      # - name: Print Inventory
+      #   run: |
+      #     cat infra/ansible/inventory.ini
 
-      - name: Add EC2 host key
-        run: |
-          ssh-keyscan -H ${{ steps.ec2.outputs.ip }} >> ~/.ssh/known_hosts
+      # - name: Add EC2 host key
+      #   run: |
+      #     ssh-keyscan -H ${{ steps.ec2.outputs.ip }} >> ~/.ssh/known_hosts
 
-      - name: Run Ansible Playbook
-        working-directory: infra/ansible
-        # env:
-        #   ANSIBLE_HOST_KEY_CHECKING: False
-        run: |
-          ansible-playbook -i inventory.ini -v final-playbook.yml
+      # - name: Run Ansible Playbook
+      #   working-directory: infra/ansible
+      #   # env:
+      #   #   ANSIBLE_HOST_KEY_CHECKING: False
+      #   run: |
+      #     ansible-playbook -i inventory.ini -v final-playbook.yml
