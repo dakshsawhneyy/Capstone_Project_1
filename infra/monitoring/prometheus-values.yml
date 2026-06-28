@@ -1,0 +1,6 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}
+
+# helm upgrade monitor prometheus-community/kube-prometheus-stack -n monitoring -f infra/monitoring/prometheus-values.yml

@@ -31,6 +31,8 @@ kind: Service
 metadata:
   name: backend
   namespace: capstone-stg
+  labels:
+    app: backend
 spec:
   type: ClusterIP
   selector:
