@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: dakshsawhneyy/capstone_frontend:396ed2da9f871e51fbdf9823354f12c924fdea26
+          image: dakshsawhneyy/capstone_frontend:520143b39907fc6a7696e5ccfe446b99d032cba8
           ports:
             - containerPort: 80
 
