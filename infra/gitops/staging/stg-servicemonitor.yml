@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: stg-backend-servicemonitor
-  namespace: monitoring
+  namespace: capstone-stg
   labels:
     release: monitor          # MUST match your Prometheus Helm release name
     app: backend
