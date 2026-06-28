@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: dakshsawhneyy/capstone_backend:cc45bcf89aef870f1b7155ae983598cdda303c65
+          image: dakshsawhneyy/capstone_backend:200f49a8f56fec74ae49e071e1202ca684308462
           ports:
             - containerPort: 8080
           env:
