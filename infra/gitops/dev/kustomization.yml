@@ -7,3 +7,4 @@ resources:
   - mongo.yml
   - backend.yml
   - frontend.yml
+  - dev-servicemonitor.yml

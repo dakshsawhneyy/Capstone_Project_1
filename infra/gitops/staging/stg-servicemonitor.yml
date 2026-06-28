@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: stg-backend-servicemonitor
+  namespace: monitoring
+  labels:
+    release: monitor          # MUST match your Prometheus Helm release name
+    app: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend            # matches the label on the backend Service
+  namespaceSelector:
+    matchNames:
+      - capstone-stg              # namespace where the backend Service lives
+  endpoints:
+    - port: http              # matches the named port on the backend Service
+      path: /metrics
+      interval: 15s
+      scrapeTimeout: 10s
